@@ -5,7 +5,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { BookOpen, Map, ChevronRight, ChevronLeft, Menu, X, Play, Pause, Volume2, Loader2 } from 'lucide-react';
+import { BookOpen, Map, ChevronRight, ChevronLeft, Menu, X, Play, Pause, Volume2, Loader2, Flame } from 'lucide-react';
 import { SURAHS } from './data';
 import { Surah, Verse } from './types';
 
@@ -14,6 +14,7 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showBismillah, setShowBismillah] = useState(true);
   const [viewMode, setViewMode] = useState<'arabic' | 'english' | 'dual'>('dual');
+  const [streak, setStreak] = useState(0);
   
   // Audio state
   const [playingVerseId, setPlayingVerseId] = useState<string | null>(null);
@@ -21,6 +22,48 @@ export default function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const currentSurah = useMemo(() => SURAHS[currentSurahIndex], [currentSurahIndex]);
+
+  useEffect(() => {
+    // Streak logic in useEffect
+    const checkStreak = () => {
+      const lastVisit = localStorage.getItem('last_visit');
+      const currentStreak = parseInt(localStorage.getItem('streak_count') || '0', 10);
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+      if (!lastVisit) {
+        // First time
+        setStreak(1);
+        localStorage.setItem('streak_count', '1');
+        localStorage.setItem('last_visit', today.toString());
+      } else {
+        const lastVisitDate = parseInt(lastVisit, 10);
+        const oneDay = 24 * 60 * 60 * 1000;
+        const diff = today - lastVisitDate;
+
+        if (diff === oneDay) {
+          // Exactly one day later
+          const newStreak = currentStreak + 1;
+          setStreak(newStreak);
+          localStorage.setItem('streak_count', newStreak.toString());
+          localStorage.setItem('last_visit', today.toString());
+        } else if (diff > oneDay) {
+          // Missed a day
+          setStreak(1);
+          localStorage.setItem('streak_count', '1');
+          localStorage.setItem('last_visit', today.toString());
+        } else if (diff === 0) {
+          // Same day
+          setStreak(currentStreak || 1);
+        } else {
+          // Clock was moved back or something weird
+          setStreak(currentStreak || 1);
+        }
+      }
+    };
+
+    checkStreak();
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -104,12 +147,26 @@ export default function App() {
             </h1>
             <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest font-semibold">Preserved Surahs</p>
           </div>
-          <button 
-            onClick={() => setIsSidebarOpen(false)}
-            className="p-2 hover:bg-white/5 rounded-full lg:hidden"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-center">
+              <div className="relative">
+                <Flame className={`w-5 h-5 ${streak > 0 ? 'text-amber-500 fill-amber-500/20 animate-pulse' : 'text-gray-600'}`} />
+                {streak > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] font-mono font-bold text-amber-500/80 mt-1">{streak}</span>
+            </div>
+            <button 
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 hover:bg-white/5 rounded-full lg:hidden"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-1 custom-scrollbar">
@@ -171,22 +228,26 @@ export default function App() {
             >
               <Menu className="w-5 h-5 text-amber-500" />
             </button>
-            <div>
-              <div className="flex items-center gap-3">
-                <h2 className="text-3xl md:text-4xl font-arabic text-white tracking-tight">{currentSurah.englishName}</h2>
-                <span className="text-xl md:text-2xl font-arabic text-amber-500/80 mt-1">{currentSurah.name}</span>
+            <div className="lg:hidden flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full">
+              <Flame className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-500 fill-amber-500/20" />
+              <span className="text-[10px] md:text-sm font-mono font-bold text-amber-500">{streak}</span>
+            </div>
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-arabic text-white tracking-tight">{currentSurah.englishName}</h2>
+                <span className="text-lg sm:text-xl md:text-2xl font-arabic text-amber-500/80 mt-0.5">{currentSurah.name}</span>
               </div>
-              <div className="flex items-center gap-3 mt-2">
-                <p className="text-amber-500 font-mono text-[10px] md:text-sm tracking-widest uppercase text-balance">
+              <div className="flex items-center gap-3 mt-1 md:mt-2">
+                <p className="text-amber-500 font-mono text-[9px] sm:text-xs md:text-sm tracking-widest uppercase text-balance">
                   {currentSurah.verses.length} Verses
                 </p>
               </div>
             </div>
           </div>
-          <div className="flex gap-2 mt-6 md:mt-0">
+          <div className="flex gap-1.5 sm:gap-2 mt-4 md:mt-0 flex-wrap">
             <button 
               onClick={() => setViewMode('arabic')}
-              className={`px-4 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all ${
+              className={`px-3 sm:px-4 py-1.5 rounded-full border text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all ${
                 viewMode === 'arabic' ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20' : 'border-dark-border text-gray-500 hover:border-amber-500/30'
               }`}
             >
@@ -194,7 +255,7 @@ export default function App() {
             </button>
             <button 
               onClick={() => setViewMode('dual')}
-              className={`px-4 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all ${
+              className={`px-3 sm:px-4 py-1.5 rounded-full border text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all ${
                 viewMode === 'dual' ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20' : 'border-dark-border text-gray-500 hover:border-amber-500/30'
               }`}
             >
@@ -202,7 +263,7 @@ export default function App() {
             </button>
             <button 
               onClick={() => setViewMode('english')}
-              className={`px-4 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all ${
+              className={`px-3 sm:px-4 py-1.5 rounded-full border text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all ${
                 viewMode === 'english' ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20' : 'border-dark-border text-gray-500 hover:border-amber-500/30'
               }`}
             >
@@ -212,8 +273,8 @@ export default function App() {
         </header>
 
         {/* Reading Area */}
-        <div className="flex-1 overflow-y-auto px-6 md:px-12 py-12 custom-scrollbar">
-          <div className="max-w-3xl mx-auto space-y-24">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 md:px-12 py-8 md:py-12 custom-scrollbar">
+          <div className="max-w-3xl mx-auto space-y-16 md:space-y-24">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSurah.id}
@@ -221,46 +282,46 @@ export default function App() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}
-                className="space-y-20 pb-20"
+                className="space-y-12 sm:space-y-16 md:space-y-20 pb-20"
               >
                 {/* Bismillah */}
                 {showBismillah && (
                   <div className="text-center pb-8 border-b border-white/5">
-                    <p className="arabic-text text-4xl text-amber-500 leading-relaxed mb-4">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-                    <p className="text-xs text-gray-500 font-medium tracking-wide">In the Name of Allah, Most Compassionate, Most Merciful</p>
+                    <p className="arabic-text text-3xl sm:text-4xl text-amber-500 leading-relaxed mb-4">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium tracking-wide">In the Name of Allah, Most Compassionate, Most Merciful</p>
                   </div>
                 )}
 
                 {currentSurah.verses.map((verse) => (
                   <div 
                     key={`${currentSurah.id}-${verse.number}`} 
-                    className="flex flex-col gap-8 group/verse cursor-pointer transition-all active:scale-[0.99]"
+                    className="flex flex-col gap-6 sm:gap-8 group/verse cursor-pointer transition-all active:scale-[0.99]"
                     onClick={() => toggleAudio(verse)}
                   >
-                    <div className="flex items-start justify-between gap-8">
-                      <div className="flex flex-col items-center gap-4 pt-3 shrink-0">
-                        <span className="text-xs font-mono text-gray-600 w-12 text-center">
+                    <div className="flex items-start justify-between gap-4 sm:gap-8">
+                      <div className="flex flex-col items-center gap-3 sm:gap-4 pt-2 sm:pt-3 shrink-0">
+                        <span className="text-[10px] sm:text-xs font-mono text-gray-600 w-10 sm:w-12 text-center">
                           {currentSurah.isPartial ? verse.number : `${currentSurah.surahNumber}:${verse.number}`}
                         </span>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all ${
                           playingVerseId === `${currentSurah.id}-${verse.number}` 
                             ? 'bg-amber-500 text-black' 
                             : 'bg-white/5 text-gray-500 group-hover/verse:bg-white/10 group-hover/verse:text-amber-500'
                         }`}>
                           {playingVerseId === `${currentSurah.id}-${verse.number}` ? (
                             isAudioLoading ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
+                              <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                             ) : (
-                              <Pause className="w-4 h-4 fill-current" />
+                              <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
                             )
                           ) : (
-                            <Play className="w-4 h-4 fill-current ml-0.5" />
+                            <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current ml-0.5" />
                           )}
                         </div>
                       </div>
                       
                       {(viewMode === 'arabic' || viewMode === 'dual') && (
-                        <p className={`arabic-text text-4xl md:text-5xl text-right leading-[2.2] flex-1 transition-colors ${
+                        <p className={`arabic-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-right leading-[2.2] sm:leading-[2.6] flex-1 transition-colors ${
                           playingVerseId === `${currentSurah.id}-${verse.number}` ? 'text-amber-500' : 'text-gray-100'
                         }`} dir="rtl">
                           {verse.arabic}
@@ -268,7 +329,7 @@ export default function App() {
                       )}
                     </div>
                     {(viewMode === 'english' || viewMode === 'dual') && (
-                      <p className={`text-base md:text-xl font-sans border-l-2 pl-8 leading-relaxed max-w-2xl transition-colors ${
+                      <p className={`text-sm sm:text-base md:text-xl font-sans border-l-2 pl-6 sm:pl-8 leading-[1.8] max-w-2xl transition-colors ${
                         playingVerseId === `${currentSurah.id}-${verse.number}` ? 'text-amber-100 border-amber-500' : 'text-gray-400 border-amber-500/20'
                       }`}>
                         {verse.english}
