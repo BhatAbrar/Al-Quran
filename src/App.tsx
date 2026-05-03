@@ -228,10 +228,10 @@ export default function App() {
   };
 
   const transliterationSizeClasses = {
-    sm: 'text-[8px] sm:text-[9px]',
-    md: 'text-[10px] sm:text-xs',
-    lg: 'text-xs sm:text-sm',
-    xl: 'text-sm sm:text-base'
+    sm: 'text-xs sm:text-sm',
+    md: 'text-sm sm:text-base',
+    lg: 'text-base sm:text-lg',
+    xl: 'text-lg sm:text-xl'
   };
 
   return (
