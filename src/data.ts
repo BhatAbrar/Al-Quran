@@ -77,7 +77,7 @@ export const SURAHS: Surah[] = [
   {
     id: '2-285-286',
     name: 'خواتيم سورة البقرة',
-    englishName: 'Last 2 of Al-Baqarah',
+    englishName: 'Al-Baqara 2 verses',
     surahNumber: 2,
     isPartial: true,
     verses: [
