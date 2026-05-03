@@ -7,6 +7,7 @@ export interface Verse {
   number: number;
   arabic: string;
   english: string;
+  transliteration: string;
 }
 
 export interface Surah {

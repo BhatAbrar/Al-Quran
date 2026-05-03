@@ -9,10 +9,10 @@ A refined web application designed for the spiritual practice of nightly Quranic
   - **Full Ayah**: Click the row or play button to hear the full verse by Mishary Rashid Alafasy.
   - **Word-by-Word**: Click any individual Arabic word to hear its specific pronunciation.
 - **Streak Tracking**: Maintain your spiritual consistency with a built-in streak counter that resets if a day is missed.
+- **Transliteration**: Toggle transliteration to help with reading and pronunciation.
 - **Multiple View Modes**:
   - **Arabic Only**: For focused reading of the original text.
-  - **English Only**: For understanding the meaning.
-  - **Dual View**: Parallel Arabic and English text for holistic study.
+  - **Dual View**: Parallel Arabic and English text for holistic study, with optional transliteration.
 - **Elegant Dark Theme**: A premium dark aesthetic designed for comfortable reading at night, minimizing eye strain.
 - **Responsive Design**: Fully optimized for both desktop and mobile devices.
 - **Interactive Sidebar**: Quick navigation between different Surahs and sections.

@@ -14,6 +14,7 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showBismillah, setShowBismillah] = useState(true);
   const [viewMode, setViewMode] = useState<'arabic' | 'english' | 'dual'>('dual');
+  const [showTransliteration, setShowTransliteration] = useState(true);
   const [streak, setStreak] = useState(0);
   
   // Audio state
@@ -307,13 +308,14 @@ export default function App() {
             >
               Dual
             </button>
+            <div className="w-[1px] h-4 bg-white/10 mx-1 mt-2.5" />
             <button 
-              onClick={() => setViewMode('english')}
+              onClick={() => setShowTransliteration(!showTransliteration)}
               className={`px-3 sm:px-4 py-1.5 rounded-full border text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all ${
-                viewMode === 'english' ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20' : 'border-dark-border text-gray-500 hover:border-amber-500/30'
+                showTransliteration ? 'bg-amber-500/20 text-amber-500 border-amber-500/50' : 'border-dark-border text-gray-500 hover:border-amber-500/30'
               }`}
             >
-              English
+              Transliteration
             </button>
           </div>
         </header>
@@ -407,6 +409,11 @@ export default function App() {
                         playingVerseId === `${currentSurah.id}-${verse.number}` ? 'text-amber-100 border-amber-500' : 'text-gray-400 border-amber-500/20'
                       }`}>
                         {verse.english}
+                      </p>
+                    )}
+                    {showTransliteration && (
+                      <p className="text-[10px] sm:text-xs font-serif italic text-amber-500/60 pl-6 sm:pl-8 -mt-2">
+                        {verse.transliteration}
                       </p>
                     )}
                   </div>
