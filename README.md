@@ -5,7 +5,10 @@ A refined web application designed for the spiritual practice of nightly Quranic
 ## Main Features
 
 - **Curated Sequence**: Includes Al-Kaafiroon, Al-Ikhlaas, Al-Falaq, An-Naas, Ayatul Kursi, the final two verses of Al-Baqarah, and Surah Al-Mulk.
-- **Audio Recitation**: Listen to every Ayah individually with high-quality audio by Qari Mishary Rashid Alafasy.
+- **Audio Recitation**: 
+  - **Full Ayah**: Click the row or play button to hear the full verse by Mishary Rashid Alafasy.
+  - **Word-by-Word**: Click any individual Arabic word to hear its specific pronunciation.
+- **Streak Tracking**: Maintain your spiritual consistency with a built-in streak counter that resets if a day is missed.
 - **Multiple View Modes**:
   - **Arabic Only**: For focused reading of the original text.
   - **English Only**: For understanding the meaning.
@@ -16,9 +19,9 @@ A refined web application designed for the spiritual practice of nightly Quranic
 
 ## Navigation & Controls
 
-- **Audio Playback**: Simply click on any Ayah to start the recitation. Click again to pause.
-- **Surah List**: Access the full sequence via the sidebar or the floating navigation menu at the bottom.
-- **Sequence Tracking**: Progress indicators help you keep track of your recitation journey.
+- **Audio Playback**: Click on a verse row for the full recitation, or click on a specific word for word-by-word audio.
+- **Surah List**: Access the full sequence via the sidebar or the navigation indicators at the bottom.
+- **Streak**: Your streak increases every day you visit. If you miss a day, it resets to zero!
 
 ## Development
 

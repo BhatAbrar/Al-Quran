@@ -18,6 +18,7 @@ export default function App() {
   
   // Audio state
   const [playingVerseId, setPlayingVerseId] = useState<string | null>(null);
+  const [playingWordId, setPlayingWordId] = useState<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -73,6 +74,7 @@ export default function App() {
     if (audioRef.current) {
       audioRef.current.pause();
       setPlayingVerseId(null);
+      setPlayingWordId(null);
     }
   }, [currentSurahIndex, currentSurah]);
 
@@ -101,6 +103,7 @@ export default function App() {
       audioRef.current.pause();
     }
 
+    setPlayingWordId(null);
     const surahStr = currentSurah.surahNumber.toString().padStart(3, '0');
     const ayahStr = verse.number.toString().padStart(3, '0');
     const audioUrl = `https://everyayah.com/data/Alafasy_128kbps/${surahStr}${ayahStr}.mp3`;
@@ -128,6 +131,49 @@ export default function App() {
       console.error("Audio load failed");
       setPlayingVerseId(null);
       setIsAudioLoading(false);
+    };
+  };
+
+  const toggleWordAudio = (verse: Verse | 'bismillah', wordIndex: number) => {
+    const id = verse === 'bismillah' ? 'bismillah' : `${currentSurah.id}-${verse.number}`;
+    const wordId = `${id}-${wordIndex}`;
+    
+    if (playingWordId === wordId) {
+      audioRef.current?.pause();
+      setPlayingWordId(null);
+      return;
+    }
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    setPlayingVerseId(null);
+
+    let surahStr, ayahStr;
+    if (verse === 'bismillah') {
+      surahStr = '001';
+      ayahStr = '001';
+    } else {
+      surahStr = currentSurah.surahNumber.toString().padStart(3, '0');
+      ayahStr = verse.number.toString().padStart(3, '0');
+    }
+    
+    const wordStr = wordIndex.toString().padStart(3, '0');
+    const audioUrl = `https://audio.qurancdn.com/wbw/${surahStr}_${ayahStr}_${wordStr}.mp3`;
+
+    setPlayingWordId(wordId);
+    
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+
+    audio.play().catch(err => {
+      console.error("Word audio play failed:", err);
+      setPlayingWordId(null);
+    });
+
+    audio.onended = () => {
+      setPlayingWordId(null);
     };
   };
 
@@ -287,7 +333,22 @@ export default function App() {
                 {/* Bismillah */}
                 {showBismillah && (
                   <div className="text-center pb-8 border-b border-white/5">
-                    <p className="arabic-text text-3xl sm:text-4xl text-amber-500 leading-relaxed mb-4">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                    <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 mb-4" dir="rtl">
+                      {'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'.split(' ').map((word, wIdx) => (
+                        <span 
+                          key={wIdx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleWordAudio('bismillah', wIdx + 1);
+                          }}
+                          className={`arabic-text text-3xl sm:text-4xl cursor-pointer transition-all hover:text-amber-400 ${
+                            playingWordId === `bismillah-${wIdx + 1}` ? 'text-amber-500 scale-110 drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]' : 'text-amber-500/80'
+                          }`}
+                        >
+                          {word}
+                        </span>
+                      ))}
+                    </div>
                     <p className="text-[10px] sm:text-xs text-gray-500 font-medium tracking-wide">In the Name of Allah, Most Compassionate, Most Merciful</p>
                   </div>
                 )}
@@ -321,11 +382,24 @@ export default function App() {
                       </div>
                       
                       {(viewMode === 'arabic' || viewMode === 'dual') && (
-                        <p className={`arabic-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-right leading-[2.2] sm:leading-[2.6] flex-1 transition-colors ${
+                        <div className={`arabic-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-right leading-[2.2] sm:leading-[2.6] flex-1 transition-colors flex flex-wrap justify-end gap-x-2 sm:gap-x-4 ${
                           playingVerseId === `${currentSurah.id}-${verse.number}` ? 'text-amber-500' : 'text-gray-100'
                         }`} dir="rtl">
-                          {verse.arabic}
-                        </p>
+                          {verse.arabic.split(/\s+/).filter(Boolean).map((word, wIdx) => (
+                            <span 
+                              key={wIdx}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleWordAudio(verse, wIdx + 1);
+                              }}
+                              className={`cursor-pointer transition-all hover:text-amber-400 select-none ${
+                                playingWordId === `${currentSurah.id}-${verse.number}-${wIdx + 1}` ? 'text-amber-500 scale-110' : ''
+                              }`}
+                            >
+                              {word}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </div>
                     {(viewMode === 'english' || viewMode === 'dual') && (
