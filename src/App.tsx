@@ -529,15 +529,16 @@ export default function App() {
                 {currentSurah.verses.map((verse) => (
                   <div 
                     key={`${currentSurah.id}-${verse.number}`} 
-                    className="flex flex-col gap-6 sm:gap-8 group/verse cursor-pointer transition-all active:scale-[0.99]"
-                    onClick={() => toggleAudio(verse)}
+                    className="flex flex-col gap-6 sm:gap-8 group/verse transition-all"
                   >
                     <div className="flex items-start justify-between gap-4 sm:gap-8">
                       <div className="flex flex-col items-center gap-3 sm:gap-4 pt-2 sm:pt-3 shrink-0">
                         <span className={`text-[10px] sm:text-xs font-mono w-10 sm:w-12 text-center ${theme === 'dark' ? 'text-gray-600' : 'text-gray-400'}`}>
                           {currentSurah.isPartial ? verse.number : `${currentSurah.surahNumber}:${verse.number}`}
                         </span>
-                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all ${
+                        <div 
+                          onClick={() => toggleAudio(verse)}
+                          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all cursor-pointer active:scale-95 ${
                           playingVerseId === `${currentSurah.id}-${verse.number}` 
                             ? `${theme === 'dark' ? 'bg-amber-500 text-black' : 'bg-black text-white'}` 
                             : theme === 'dark' ? 'bg-white/5 text-gray-500 group-hover/verse:bg-white/10 group-hover/verse:text-amber-500' : 'bg-black/5 text-gray-400 group-hover/verse:bg-black/10 group-hover/verse:text-black'
