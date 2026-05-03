@@ -319,14 +319,9 @@ export default function App() {
           ))}
         </div>
 
-        <div className={`p-6 border-t text-[9px] flex flex-col gap-2 tracking-widest font-bold uppercase ${theme === 'dark' ? 'border-dark-border text-gray-600' : 'border-light-border text-gray-400'}`}>
-          <div className={`flex justify-between items-center ${accentColorMuted}`}>
-            <span>{new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())}</span>
-          </div>
-          <div className="flex justify-between items-center opacity-60">
-            <span>{SURAHS.length} SECTIONS</span>
-            <span>V1.0</span>
-          </div>
+        <div className={`p-6 border-t text-[9px] flex justify-between tracking-widest font-bold uppercase ${theme === 'dark' ? 'border-dark-border text-gray-600' : 'border-light-border text-gray-400'}`}>
+          <span>{SURAHS.length} SECTIONS</span>
+          <span>V1.0</span>
         </div>
       </aside>
 
@@ -346,14 +341,9 @@ export default function App() {
             >
               <Menu className={`w-5 h-5 ${accentColor}`} />
             </button>
-            <div className="lg:hidden flex flex-col items-center gap-1">
-              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-full ${theme === 'dark' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-black/5 border-black/10'}`}>
-                <Flame className={`w-3.5 h-3.5 md:w-4 md:h-4 ${accentColor} ${accentFill}`} />
-                <span className={`text-[10px] md:text-sm font-mono font-bold ${accentColor}`}>{streak}</span>
-              </div>
-              <span className={`text-[8px] font-bold uppercase tracking-tighter ${accentColorSubtle}`}>
-                {new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'short' }).format(new Date())}
-              </span>
+            <div className="lg:hidden flex items-center gap-2 px-3 py-1.5 border rounded-full transition-all duration-300 ${theme === 'dark' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-black/5 border-black/10'}">
+              <Flame className={`w-3.5 h-3.5 md:w-4 md:h-4 ${accentColor} ${accentFill}`} />
+              <span className={`text-[10px] md:text-sm font-mono font-bold ${accentColor}`}>{streak}</span>
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
