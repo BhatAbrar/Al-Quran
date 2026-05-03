@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Night Recitation
 
-# Run and deploy your AI Studio app
+A refined web application designed for the spiritual practice of nightly Quranic recitation. This application features a curated sequence of Surahs and verses recommended for the evening, providing a focused and elegant reading experience.
 
-This contains everything you need to run your app locally.
+## Main Features
 
-View your app in AI Studio: https://ai.studio/apps/8958faee-4206-4abe-85dd-6c644e9abe0a
+- **Curated Sequence**: Includes Al-Kaafiroon, Al-Ikhlaas, Al-Falaq, An-Naas, Ayatul Kursi, the final two verses of Al-Baqarah, and Surah Al-Mulk.
+- **Audio Recitation**: Listen to every Ayah individually with high-quality audio by Qari Mishary Rashid Alafasy.
+- **Multiple View Modes**:
+  - **Arabic Only**: For focused reading of the original text.
+  - **English Only**: For understanding the meaning.
+  - **Dual View**: Parallel Arabic and English text for holistic study.
+- **Elegant Dark Theme**: A premium dark aesthetic designed for comfortable reading at night, minimizing eye strain.
+- **Responsive Design**: Fully optimized for both desktop and mobile devices.
+- **Interactive Sidebar**: Quick navigation between different Surahs and sections.
 
-## Run Locally
+## Navigation & Controls
 
-**Prerequisites:**  Node.js
+- **Audio Playback**: Simply click on any Ayah to start the recitation. Click again to pause.
+- **Surah List**: Access the full sequence via the sidebar or the floating navigation menu at the bottom.
+- **Sequence Tracking**: Progress indicators help you keep track of your recitation journey.
 
+## Development
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+This application is built using modern web technologies:
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS** (v4)
+- **Motion** (Framer Motion)
+- **Lucide React Icons**
+
+---
+**Developed by Abrar Bashir**
