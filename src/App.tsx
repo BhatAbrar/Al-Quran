@@ -556,7 +556,7 @@ export default function App() {
                       </div>
                       
                       {(viewMode === 'arabic' || viewMode === 'dual') && (
-                        <div className={`arabic-text ${arabicSizeClasses[textSize]} text-right leading-[2.2] sm:leading-[2.6] flex-1 transition-colors flex flex-wrap justify-end gap-x-2 sm:gap-x-4 font-${arabicFont} ${
+                        <div className={`arabic-text ${arabicSizeClasses[textSize]} text-right leading-[2.2] sm:leading-[2.6] flex-1 transition-colors flex flex-wrap justify-start gap-x-2 sm:gap-x-4 font-${arabicFont} ${
                           playingVerseId === `${currentSurah.id}-${verse.number}` ? accentColor : theme === 'dark' ? 'text-gray-100' : 'text-gray-800'
                         }`} dir="rtl">
                           {verse.arabic.split(/\s+/).filter(Boolean).map((word, wIdx) => (
