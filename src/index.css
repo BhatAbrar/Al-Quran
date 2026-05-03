@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Scheherazade+New:wght@400;700&family=Lateef:wght@200;300;400;500;600;700;800&family=Reem+Kufi:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -11,17 +11,36 @@
   --color-dark-surface: #0f0f12;
   --color-dark-border: #2a2a2e;
   --color-amber-accent: #f59e0b;
+
+  --color-light-bg: #f8f9fa;
+  --color-light-sidebar: #ffffff;
+  --color-light-surface: #f1f3f5;
+  --color-light-border: #e9ecef;
+
+  --animate-spin-slow: spin 3s linear infinite;
 }
 
 body {
-  @apply bg-dark-bg text-[#d1d5db] font-sans transition-colors duration-300;
+  @apply transition-colors duration-300;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+body.dark {
+  @apply bg-dark-bg text-[#d1d5db];
+}
+
+body.light {
+  @apply bg-light-bg text-[#495057];
 }
 
 .arabic-text {
   direction: rtl;
-  @apply font-arabic;
 }
+
+.font-uthmani { font-family: "Amiri", serif; }
+.font-indopak { font-family: "Scheherazade New", serif; }
+.font-modern { font-family: "Lateef", cursive; }
+.font-kufi { font-family: "Reem Kufi", sans-serif; }
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
